@@ -1,68 +1,117 @@
-const canvas = document.getElementById('canvas');
+
+const sprites = new Image();
+sprites.src = 'sprites.png';
+
+const canvas = document.querySelector('canvas');
 const CTX = canvas.getContext('2d');
-var img=new Image();
-  img.onload=function(){
-  CTX.drawImage(this, 10, 10);
+
+const planoDeFundo = {
+  spriteX: 390,
+  spriteY: 0,
+  largura: 275,
+  altura: 204,
+  x: 0,
+  y: canvas.height - 204,
+  desenha() {
+    CTX.fillStyle = '#70c5ce';
+    CTX.fillRect(0,0, canvas.width, canvas.height)
+
+    CTX.drawImage(
+      sprites,
+      planoDeFundo.spriteX, planoDeFundo.spriteY,
+      planoDeFundo.largura, planoDeFundo.altura,
+      planoDeFundo.x, planoDeFundo.y,
+      planoDeFundo.largura, planoDeFundo.altura,
+    );
+
+    CTX.drawImage(
+      sprites,
+      planoDeFundo.spriteX, planoDeFundo.spriteY,
+      planoDeFundo.largura, planoDeFundo.altura,
+      (planoDeFundo.x + planoDeFundo.largura), planoDeFundo.y,
+      planoDeFundo.largura, planoDeFundo.altura,
+    );
+  },
+};
+const chao = {
+  spriteX: 0,
+  spriteY: 610,
+  largura: 224,
+  altura: 112,
+  x: 0,
+  y: canvas.height - 112,
+  desenha() {
+    CTX.drawImage(
+      sprites,
+      chao.spriteX, chao.spriteY,
+      chao.largura, chao.altura,
+      chao.x, chao.y,
+      chao.largura, chao.altura,
+    );
+    CTX.drawImage(
+    sprites,
+    chao.spriteX, chao.spriteY,
+    chao.largura, chao.altura,
+    (chao.x+chao.largura), chao.y,
+    chao.largura, chao.altura,
+    );
+    CTX.drawImage(
+      sprites,
+      chao.spriteX, chao.spriteY,
+      chao.largura, chao.altura,
+      (chao.x+chao.largura*2), chao.y,
+      chao.largura, chao.altura,
+    );
+  },
+};
+
+  const flappyBird = {
+    spriteX: 390,
+    spriteY: 204,
+    largura: 100,
+    altura: 100,
+    x: 10,
+    y: 400,
+    desenha() {
+      CTX.drawImage(
+        sprites,
+        flappyBird.spriteX, flappyBird.spriteY, // Sprite X, Sprite Y
+        flappyBird.largura, flappyBird.altura, // Tamanho do recorte na sprite
+        flappyBird.x, flappyBird.y,
+        flappyBird.largura, flappyBird.altura,
+      );
+    }
   }
-  img.src = "img/balaozinho.png";
 
-  CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.moveTo(360, 100);
-CTX.lineTo(300, 100);
-CTX.fill();
-CTX.stroke();
+    const nuvem = {
+    spriteX: 390,
+    spriteY: 304,
+    largura: 200,
+    altura: 200,
+    x: 300,
+    y: 100,
+    desenha(){
+      CTX.drawImage(
+        sprites,
+        nuvem.spriteX, nuvem.spriteY,
+        nuvem.largura, nuvem.altura,
+        nuvem.x, nuvem.y,
+        nuvem.largura, nuvem.altura,
+      );
+    }
+    }
 
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.arc(310, 100, 60, 0,  Math.PI, true);
-CTX.fillStyle='white';
-CTX.fill();
-CTX.stroke();
+function loop() {
 
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.arc(365, 100, 45, 0,  Math.PI, true);
-CTX.fillStyle='white';
-CTX.fill();
-CTX.stroke();
+  planoDeFundo.desenha();
+  chao.desenha();  
+  flappyBird.desenha();
+  nuvem.desenha();
+  
+  flappyBird.y = flappyBird.y - 1;
+  nuvem.x = nuvem.x - 1;
 
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.arc(250, 100, 45, 0,  Math.PI, true);
-CTX.fillStyle='white';
-CTX.fill();
-CTX.stroke();
+    requestAnimationFrame(loop);
+}
 
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.moveTo(50, 330);
-CTX.lineTo(150, 330);
-CTX.fill();
-CTX.stroke();
-
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.arc(80, 330, 55, 0,  Math.PI, true);
-CTX.fillStyle='white';
-CTX.fill();
-CTX.stroke();
-
-CTX.strokeStyle='white';
-CTX.beginPath();
-CTX.arc(150, 330, 40, 0,  Math.PI, true);
-CTX.fillStyle='white';
-CTX.fill();
-CTX.stroke();
-
-CTX.strokeStyle='darkgreen';
-CTX.beginPath();
-CTX.arc(300, 1000, 400, 0,  Math.PI, true);
-CTX.fillStyle='green';
-CTX.fill();
-CTX.stroke();
-CTX.beginPath();
-CTX.arc(1000, 1000, 600, 0,  Math.PI, true);
-CTX.fillStyle='green';
-CTX.fill();
-CTX.stroke();
+loop();
