@@ -72,6 +72,12 @@ const chao = {
     altura: 100,
     x: 10,
     y: 400,
+    gravidade: 0.25,
+    velocidade: 0,
+    atualiza(){
+      balão.velocidade = balão.velocidade + balão.gravidade;
+      balão.y = balão.y - (balão.velocidade);
+    },
     desenha() {
       CTX.drawImage(
         sprites,
@@ -90,6 +96,9 @@ const chao = {
     altura: 200,
     x: 300,
     y: 100,
+    atualiza(){
+      nuvem.x = nuvem.x - 1;
+    },
     desenha(){
       CTX.drawImage(
         sprites,
@@ -105,11 +114,12 @@ function loop() {
 
   planoDeFundo.desenha();
   chao.desenha();  
+  balão.atualiza();
   balão.desenha();
+  nuvem.atualiza();
   nuvem.desenha();
   
-  balão.y = balão.y - 1;
-  nuvem.x = nuvem.x - 1;
+  
 
     requestAnimationFrame(loop);
 }
