@@ -65,7 +65,7 @@ const chao = {
   },
 };
 
-  const flappyBird = {
+  const balão = {
     spriteX: 390,
     spriteY: 204,
     largura: 100,
@@ -75,10 +75,10 @@ const chao = {
     desenha() {
       CTX.drawImage(
         sprites,
-        flappyBird.spriteX, flappyBird.spriteY, // Sprite X, Sprite Y
-        flappyBird.largura, flappyBird.altura, // Tamanho do recorte na sprite
-        flappyBird.x, flappyBird.y,
-        flappyBird.largura, flappyBird.altura,
+        balão.spriteX, balão.spriteY, // Sprite X, Sprite Y
+        balão.largura, balão.altura, // Tamanho do recorte na sprite
+        balão.x, balão.y,
+        balão.largura, balão.altura,
       );
     }
   }
@@ -105,10 +105,10 @@ function loop() {
 
   planoDeFundo.desenha();
   chao.desenha();  
-  flappyBird.desenha();
+  balão.desenha();
   nuvem.desenha();
   
-  flappyBird.y = flappyBird.y - 1;
+  balão.y = balão.y - 1;
   nuvem.x = nuvem.x - 1;
 
     requestAnimationFrame(loop);
