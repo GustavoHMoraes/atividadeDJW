@@ -33,6 +33,7 @@ const planoDeFundo = {
     );
   },
 };
+
 const chao = {
   spriteX: 0,
   spriteY: 610,
@@ -41,6 +42,7 @@ const chao = {
   x: 0,
   y: canvas.height - 112,
   desenha() {
+    
     CTX.drawImage(
       sprites,
       chao.spriteX, chao.spriteY,
@@ -48,6 +50,7 @@ const chao = {
       chao.x, chao.y,
       chao.largura, chao.altura,
     );
+    
     CTX.drawImage(
     sprites,
     chao.spriteX, chao.spriteY,
@@ -55,6 +58,7 @@ const chao = {
     (chao.x+chao.largura), chao.y,
     chao.largura, chao.altura,
     );
+    
     CTX.drawImage(
       sprites,
       chao.spriteX, chao.spriteY,
@@ -65,20 +69,39 @@ const chao = {
   },
 };
 
+function Colidir(balão, chao){
+  const balãoY = balão.y + balão.altura;
+  const chaoY = chao.y;
+
+  if(balãoY >= chaoY){
+    return true;
+  }
+  
+  return false;
+
+}
+  function criabalão(){
   const balão = {
     spriteX: 390,
     spriteY: 204,
     largura: 100,
     altura: 100,
     x: 10,
-    y: 400,
+    y: 100,
     gravidade: 0.25,
     velocidade: 0,
+    
     atualiza(){
+      if(Colidir(balão, chao)){
+
+        mudaParaTela(Telas.INICIO);
+        return;
+    }
       balão.velocidade = balão.velocidade + balão.gravidade;
-      balão.y = balão.y - (balão.velocidade);
+      balão.y = balão.y + (balão.velocidade);
     },
     desenha() {
+      
       CTX.drawImage(
         sprites,
         balão.spriteX, balão.spriteY, // Sprite X, Sprite Y
@@ -88,6 +111,8 @@ const chao = {
       );
     }
   }
+  return balão;
+}
 
     const nuvem = {
     spriteX: 390,
@@ -96,10 +121,12 @@ const chao = {
     altura: 200,
     x: 300,
     y: 100,
+    
     atualiza(){
       nuvem.x = nuvem.x - 1;
     },
     desenha(){
+      
       CTX.drawImage(
         sprites,
         nuvem.spriteX, nuvem.spriteY,
@@ -117,7 +144,9 @@ const chao = {
       altura: 152,
       x: (canvas.width/ 2) - 174 / 2 ,
       y: 50,
+      
       desenha(){
+        
         CTX.drawImage(
           sprites,
         mensagemGetReady.spriteX, mensagemGetReady.spriteY,
@@ -128,16 +157,25 @@ const chao = {
       }
     }
 
+  const globais = {};
   let telaAtiva = {};
   function mudaParaTela(novaTela){
     telaAtiva = novaTela;
+
+    if(telaAtiva.inicializa){
+      telaAtiva.inicializa();
+    }
   }
-const Telas = {
+
+  const Telas = {
   INICIO:{
+    inicializa(){
+      globais.balão = criabalão();
+    },
     desenha(){
       planoDeFundo.desenha();
       chao.desenha();
-      balão.desenha();
+      globais.balão.desenha();
       nuvem.desenha();
       mensagemGetReady.desenha();
     },
@@ -145,7 +183,7 @@ const Telas = {
       mudaParaTela(Telas.JOGO);
     },
     atualiza(){
-      
+
     }
   }
 };
@@ -154,15 +192,14 @@ Telas.JOGO = {
   desenha(){
 planoDeFundo.desenha();
 chao.desenha();
-balão.desenha();
+globais.balão.desenha();
 nuvem.desenha();  
   },
   atualiza(){
-balão.atualiza();
+globais.balão.atualiza();
 nuvem.atualiza();
   }
 };
-
 
 function loop() {
 
