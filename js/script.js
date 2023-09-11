@@ -112,7 +112,7 @@ function Colidir(balão, chao){
     }
   }
   return balão;
-}
+}  
 
     const nuvem = {
     spriteX: 390,
@@ -125,7 +125,7 @@ function Colidir(balão, chao){
     atualiza(){
       nuvem.x = nuvem.x - 1;
     },
-    desenha(){
+    desenha() {
       
       CTX.drawImage(
         sprites,
@@ -134,8 +134,9 @@ function Colidir(balão, chao){
         nuvem.x, nuvem.y,
         nuvem.largura, nuvem.altura,
       );
+      }
     }
-    }
+  
 
     const mensagemGetReady = {
       spriteX: 134,
