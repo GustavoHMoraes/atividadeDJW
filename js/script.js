@@ -124,7 +124,7 @@ function Colidir(balão, chao){
     }
   }
   return balão;
-}
+}  
 
 function crianuvem(){
     const nuvem = {
