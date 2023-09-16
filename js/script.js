@@ -2,6 +2,7 @@
 const sprites = new Image();
 sprites.src = 'sprites.png';
 
+let frames = 0;
 const canvas = document.querySelector('canvas');
 const CTX = canvas.getContext('2d');
 
@@ -34,6 +35,7 @@ const planoDeFundo = {
   },
 };
 
+function criachao(){
 const chao = {
   spriteX: 0,
   spriteY: 610,
@@ -41,6 +43,14 @@ const chao = {
   altura: 112,
   x: 0,
   y: canvas.height - 112,
+  atualiza(){
+    const movimentoDochao = 1;
+    const repeteEm = chao.largura / 2;
+    const movimentacao = chao.x - movimentoDochao;
+
+    chao.x = movimentacao % repeteEm;
+  },
+
   desenha() {
     
     CTX.drawImage(
@@ -68,6 +78,8 @@ const chao = {
     );
   },
 };
+  return chao;
+}
 
 function Colidir(balão, chao){
   const balãoY = balão.y + balão.altura;
@@ -92,9 +104,9 @@ function Colidir(balão, chao){
     velocidade: 0,
     
     atualiza(){
-      if(Colidir(balão, chao)){
+      if(Colidir(balão, globais.chao)){
 
-        mudaParaTela(Telas.INICIO);
+        mudaParaTela(Telas.FINAL_GAME);
         return;
     }
       balão.velocidade = balão.velocidade + balão.gravidade;
@@ -114,6 +126,7 @@ function Colidir(balão, chao){
   return balão;
 }
 
+function crianuvem(){
     const nuvem = {
     spriteX: 390,
     spriteY: 304,
@@ -121,10 +134,7 @@ function Colidir(balão, chao){
     altura: 200,
     x: 300,
     y: 100,
-    
-    atualiza(){
-      nuvem.x = nuvem.x - 1;
-    },
+
     desenha(){
       
       CTX.drawImage(
@@ -134,8 +144,34 @@ function Colidir(balão, chao){
         nuvem.x, nuvem.y,
         nuvem.largura, nuvem.altura,
       );
+    },
+    atualiza(){
+
     }
     }
+    return nuvem;
+  }
+
+  function criaplacar(){
+    const placar = {
+      score: 0,
+      desenha(){
+        CTX.font = '35px "VT323"';
+        CTX.textAlign = 'right';
+        CTX.fillStyle = 'white';
+        CTX.fillText(` ${placar.score}`, canvas.width - 10, 35);
+      },
+      atualiza(){
+        const intervaloDeFrames = 20;
+      const passouOIntervalo = frames % intervaloDeFrames === 0;
+
+      if(passouOIntervalo) {
+        placar.score = placar.score + 1;
+      }
+    }
+  }
+  return placar;
+}
 
     const mensagemGetReady = {
       spriteX: 134,
@@ -157,6 +193,26 @@ function Colidir(balão, chao){
       }
     }
 
+    const mensagemFinalGame = {
+      spriteX: 134,
+      spriteY: 100,
+      largura: 226,
+      altura: 90,
+      x: (canvas.width/ 2) - 226 / 2 ,
+      y: 100,
+      
+      desenha(){
+        
+        CTX.drawImage(
+          sprites,
+        mensagemFinalGame.spriteX, mensagemFinalGame.spriteY,
+        mensagemFinalGame.largura, mensagemFinalGame.altura,
+        mensagemFinalGame.x, mensagemFinalGame.y,
+        mensagemFinalGame.largura, mensagemFinalGame.altura,
+        );
+      }
+    }
+
   const globais = {};
   let telaAtiva = {};
   function mudaParaTela(novaTela){
@@ -171,41 +227,61 @@ function Colidir(balão, chao){
   INICIO:{
     inicializa(){
       globais.balão = criabalão();
+      globais.chao = criachao();
+      globais.nuvem = crianuvem();
     },
     desenha(){
       planoDeFundo.desenha();
-      chao.desenha();
+      globais.chao.desenha();
       globais.balão.desenha();
-      nuvem.desenha();
       mensagemGetReady.desenha();
     },
     click(){
       mudaParaTela(Telas.JOGO);
     },
     atualiza(){
-
+      globais.chao.atualiza();
     }
   }
 };
 
 Telas.JOGO = {
+  inicializa(){
+    globais.placar = criaplacar();
+  },
   desenha(){
 planoDeFundo.desenha();
-chao.desenha();
+globais.chao.desenha();
 globais.balão.desenha();
-nuvem.desenha();  
+globais.nuvem.desenha();  
+globais.placar.desenha();
   },
   atualiza(){
+globais.nuvem.atualiza();
+globais.chao.atualiza();
 globais.balão.atualiza();
-nuvem.atualiza();
+globais.placar.atualiza();
   }
 };
+
+Telas.FINAL_GAME = {
+  desenha(){
+mensagemFinalGame.desenha();
+  },
+  atualiza(){
+
+  },
+  click(){
+     mudaParaTela(Telas.INICIO);
+  }
+}
 
 function loop() {
 
   telaAtiva.desenha();
   telaAtiva.atualiza();
 
+    frames = frames + 1;
     requestAnimationFrame(loop);
 }
 
